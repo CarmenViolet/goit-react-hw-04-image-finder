@@ -17,7 +17,7 @@ export class App extends Component {
     isLoading: false,
     isShown: false,
     error: null,
-    isOpenModal: false,
+    modalWindow: {isOpenModal: false, url: '', alt: ''}
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -29,6 +29,7 @@ export class App extends Component {
 
   onSubmit = searchRequest => {
     this.setState({searchRequest})
+    this.setState({images: [], page: 1})
   };
 
   fetchImages = async (searchRequest, page, perPage) => {
@@ -38,9 +39,15 @@ export class App extends Component {
       const maxAmountImages = data.totalHits;
       const imagesHits = data.hits;
 
-      this.setState(prevState => ({
-        images: [...prevState.images, ...mapper(imagesHits)],
-      }));
+      if(imagesHits.length !== maxAmountImages) {
+        this.setState(prevState => ({
+          images: [...prevState.images, ...mapper(imagesHits)],
+        }));
+        this.setState({ isShown: true });
+      } else {
+        this.setState({ isShown: false });
+        return;
+      }
     } catch (error) {
       this.setState({ error: error.message });
     } finally {
@@ -51,24 +58,28 @@ export class App extends Component {
   loadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
+    
+  openModal = (url) => {
+    this.setState(() => ({modalWindow: {isOpenModal: true, url}}))
+  }
 
   closeModal=()=>{
-    this.setState({isOpenModal: false})
+    this.setState({modalWindow: {isOpenModal: false}})
   }
 
   render() {
-    const { images, isLoading, isOpenModal } = this.state;
+    const { images, isShown, isLoading, modalWindow: {isOpenModal, url, alt} } = this.state;
     return (
       <div className={css.app}>
         <Searchbar onSubmit={this.onSubmit} />
 
-        <ImageGallery images={images} />
+        <ImageGallery images={images} openModal={this.openModal}/>
 
-       {isOpenModal && <Modal closeModal={this.closeModal}/>}
+       {isOpenModal && <Modal closeModal={this.closeModal}><img className={css.modal__image} src={url} alt={alt}/></Modal>}
 
         {isLoading && <Loader />}
 
-        <Button text="Load More..." handlerClick={this.loadMore} />
+      {isShown && <Button text="Load More..." handlerClick={this.loadMore} />}
       </div>
     );
   }
