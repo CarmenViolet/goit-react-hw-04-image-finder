@@ -17,7 +17,7 @@ export class App extends Component {
     isLoading: false,
     isShown: false,
     error: null,
-    currentImage: null,
+    isOpenModal: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -53,18 +53,18 @@ export class App extends Component {
   };
 
   closeModal=()=>{
-    this.setState({currentImage: null})
+    this.setState({isOpenModal: false})
   }
 
   render() {
-    const { images, isLoading } = this.state;
+    const { images, isLoading, isOpenModal } = this.state;
     return (
       <div className={css.app}>
         <Searchbar onSubmit={this.onSubmit} />
 
         <ImageGallery images={images} />
 
-        <Modal />
+       {isOpenModal && <Modal closeModal={this.closeModal}/>}
 
         {isLoading && <Loader />}
 

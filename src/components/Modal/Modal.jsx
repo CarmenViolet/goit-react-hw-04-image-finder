@@ -22,8 +22,9 @@ class Modal extends Component {
         window.removeEventListener('keydown', this.closeESC);
       }
   render() {
+
     return (
-      <div className={css.overlay}>
+      <div className={css.overlay} onClick={this.closeOverlay}>
         <div className={css.modal}>
           <img src="" alt="" />
         </div>
