@@ -27,19 +27,19 @@ export class App extends Component {
     }
   }
 
-  onSubmit = event => {
-    event.preventDefault();
+  onSubmit = searchRequest => {
+    this.setState({searchRequest})
   };
 
-  fetchImages = (searchRequest, page, perPage) => {
+  fetchImages = async (searchRequest, page, perPage) => {
     try {
       this.setState({ isLoading: true });
-      const data = fetchApi(searchRequest, page, perPage);
-      const maxAmountImage = data.totalHits;
-      const imagesPerPage = data.hits;
+      const {data} = await fetchApi(searchRequest, page, perPage);
+      const maxAmountImages = data.totalHits;
+      const imagesHits = data.hits;
 
       this.setState(prevState => ({
-        images: [...prevState.images, ...mapper(imagesPerPage)],
+        images: [...prevState.images, ...mapper(imagesHits)],
       }));
     } catch (error) {
       this.setState({ error: error.message });
