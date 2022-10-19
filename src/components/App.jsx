@@ -46,6 +46,11 @@ export class App extends Component {
         this.setState({ isShown: true });
       } else {
         this.setState({ isShown: false });
+        return alert("Please, try another request!");
+      }
+
+      if(imagesHits.length === maxAmountImages) {
+        this.setState({ isShown: false });
         return alert("You've reached the end of search!");
       }
     } catch (error) {
