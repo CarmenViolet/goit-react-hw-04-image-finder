@@ -22,13 +22,6 @@ export const App = () => {
   });
   const perPage = 12;
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { searchRequest, page, perPage } = this.state;
-  //   if (prevState.searchRequest !== searchRequest || prevState.page !== page) {
-  //     this.fetchImages(searchRequest, page, perPage);
-  //   }
-  // }
-
   useEffect(() => {
     const fetchImages = async (searchRequest, page, perPage) => {
       try {
